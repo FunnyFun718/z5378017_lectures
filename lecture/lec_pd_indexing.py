@@ -106,10 +106,10 @@ print(df)
 # ser.loc[label] --> scalar if label in index, error otherwise
 
 # Set `x` below to be the price on 2020-01-10
-x  = '?'
+x  = ser.loc['2020‑01‑10']
 
 # The following will raise a KeyError
-#ser.loc['3000-01-10'] 
+ser.loc['3000-01-10']
 
 
 # Using .loc to set elements
@@ -119,13 +119,13 @@ ser2 = ser.copy()
 
 
 # Set the price for 2020-01-02 to zero
-#ser2.loc['2020-01-02'] = 0  
+ser2.loc['2020-01-02'] = 0
 #print(ser2)                 
 
 
 # 1.1.2 Series.loc: Selection using sequence of labels
 # will return a series
-x  = '?'
+x  = ser.loc[['2020‑01‑03', '2020‑01‑10']]
 #print(x)                                  
 
 #print(type(x))              # --> <class 'pandas.core.series.Series'> 
@@ -137,7 +137,7 @@ x  = '?'
 # Importantly, the endpoint will be included when selecting with slices! 
 
 # Set x so it contains all prices from '2020-01-03' to (and including) '2020-01-10'
-x  = '?'
+x  = ser.loc['2020‑01‑03' : '2020‑01‑10']
 #print(x)    
 
 
@@ -149,17 +149,17 @@ x  = '?'
 # A single row and column labels will return a single value (scalar)
 
 # For instance, selecting the close price on January 3, 2020
-x  = '?'
+x  = df.loc['2020‑01‑03', 'Close']
 #print(x)  # --> 7.19   
 
 # A single row **or** a single column label will return a series:
 # The following will return a series corresponding to the column "Close"
-x  = '?'
+x  = df.loc[:,'Close']
 #print(x) 
-
+type(df.loc[:,'Close']) # ‑‑> <class 'pandas.core.series.Series'>
 #print(type(df.loc[:,'Close'])) # --> <class 'pandas.core.series.Series'> 
 
-y  = '?'
+y  = df.loc['2020‑01‑03', :]
 #print(y) 
 
 #print(type(df.loc['2020-01-03', :])) # --> <class 'pandas.core.series.Series'> 
@@ -178,7 +178,8 @@ y  = '?'
 
 # 1.2.2 Dataframe.loc: Selection using sequence of labels
 # Set x so it contains the closing prices for '2020-01-02' and '2020-01-03'
-x  = '?'
+x  = df.loc[['2020‑01‑02', '2020‑01‑03'], 'Close']
+
 #print(x)    
 
 
@@ -188,53 +189,84 @@ x  = '?'
 #  - A data frame otherwise
 
 # The next statement is equivalent to x = df.loc['2020-01-01':'2020-01-10']
-x  = '?'
-#print(x) 
-#print(type(x)) 
+x  = df.loc['2020‑01‑01':'2020‑01‑10', :]
+print(x)
+print(type(x))
 
 
 # This will return an empty DF
-#x = df.loc['2999-01-01':'2999-01-10', :] 
-#print(x) 
+x = df.loc['2999-01-01':'2999-01-10', :]
+print(x)
 
 # Slices can be open ended
 # However, single row labels and open column slices will NOT return a
 # dataframe, they will return a series!!!
 
-#x = df.loc['2020-01-06':, :] 
-#print(x) 
+x = df.loc['2020-01-06':, :]
+print(x)
 
-#type(df.loc['2020-01-06':, :]) # --><class 'pandas.core.frame.DataFrame'> 
+type(df.loc['2020-01-06':, :]) # --><class 'pandas.core.frame.DataFrame'>
 
-#x = df.loc['2020-01-06', 'Close':] 
-#print(x) 
+x = df.loc['2020-01-06', 'Close':]
+print(x)
 
 
 # Slices do not work as expected if the data is not sorted
 # NOTE: don't worry about the rename method now
 
-#df2 = df.copy() 
+df2 = df.copy()
 
-#df2.rename(index={'2020-01-08':'1900-01-01'}, inplace=True) 
-#print(df2) 
+df2.rename(index={'2020-01-08':'1900-01-01'}, inplace=True)
+print(df2)
 
-#x = df2.loc['2020-01-03':'2020-01-10', :] 
+x = df2.loc['2020-01-03':'2020-01-10', :]
 #print(x) 
 
 # You can avoid these issues by sorting the dataframe first
-#df2.sort_index(inplace=True) 
-#x = df2.loc['2020-01-03':'2020-01-10', :] 
-#print(x) 
+df2.sort_index(inplace=True)
+x = df2.loc['2020-01-03':'2020-01-10', :]
+print(x)
 
 
 # This will return a DataFrame
-#x = df.loc['2020-01-03':'2020-01-03'] 
-#print(x) 
+x = df.loc['2020-01-03':'2020-01-03']
+print(x)
 
 # This will return a series
-#x = df.loc['2020-01-03'] 
-#print(x) 
+x = df.loc['2020-01-03']
+print(x)
 
+
+# In‑Class Exercise 1
+# Please selectthe values for the row indexes ['b', 'c', 'd', 'e'] for col1
+# from the following dataframe.
+df = pd.DataFrame(
+  {
+    'col1': range(10),
+    'col2': range(10, 20)
+  },
+  index=list('acgfhibdje')
+)
+#Sort the row indexes in‑place
+df.sort_index(inplace=True)
+# Select the data using loc
+result = df.loc['b':'e', 'col1']
+print(df)
+print(result)
+
+# In‑Class Exercise 2
+# Please selectthe values for the row indexes ['b', 'd', 'f', 'j'] for col1
+# from the following dataframe
+import pandas as pd
+df = pd.DataFrame(
+  {
+    'col1': range(10),
+    'col2': range(10, 20)
+  },
+  index=list('acgfhibdje')
+)
+result = df.loc[['b', 'd', 'f', 'j'], ['col1']]
+print(result)
 
 
 # ----------------------------------------------------------------------------
@@ -250,18 +282,18 @@ x  = '?'
 # Series.iloc using single index will return a numpy scalar
 
 # ser.iloc[pos] --> scalar if abs(pos) < len(ser), otherwise error
-x  = '?'
-x  = '?'
+x = ser.iloc[0]
+x = ser.iloc[-1]
 
-#x = ser.iloc[100] # raises IndexError
+x = ser.iloc[100] # raises IndexError
 
 # Using .loc for assignment
 # Copy the series
 
-#s2 = ser.copy()
+s2 = ser.copy()
 #
 ## assign 
-#s2.iloc[0] = 0
+s2.iloc[0] = 0
 #print(s2)
 #
 
@@ -270,16 +302,17 @@ x  = '?'
 # If you specify a sequence of indexes, `iloc` will return a series
 # containing the data items at the positional indices:
 
-x  = '?'
-#print(x) 
+x  = ser.iloc[[0, 2]]
+
+print(x)
 
 
 # 2.1.3 Series.iloc: Selection using slices
 # Slices will not include endpoints, otherwise, work like ser.loc
-x  = '?'
+x  = ser.iloc[0:1]
 #print(x) 
 
-x  = '?'
+x  = ser.iloc[0:2]
 #print(x) 
 
 # This will return an empty series
@@ -294,19 +327,19 @@ x  = '?'
 
 # df.iloc[row pos] --> series if abs(pos) < len(df.index)
 # --> series with elements from the first "row" 
-x  = '?'
+x  = df.iloc[0]
 #print(x) 
 
 # Equivalent to
-#x = df.iloc[0,:]  
+x = df.iloc[0,:]
 #print(x)     
 
 
-# x = df.iloc[10] # --> raises IndexError because the DF contains 10 rows
+x = df.iloc[10] # --> raises IndexError because the DF contains 10 rows
 
 
 # First column (and all rows):
-x  = '?'
+x  =  df.iloc[:,0]
 #print(x)  
 
 
@@ -314,12 +347,12 @@ x  = '?'
 # 2.2.2 Dataframe.iloc: Selection using sequence of indices
 
 # This will return a series with the first two columns as labels:
-#x = df.iloc[0,[0,1]]  
+x = df.iloc[0,[0,1]]
 #print(x)  
 
 
 # This will return a *dataframe* with the first row of df
-#x = df.iloc[0:1,:]  
+x = df.iloc[0:1,:]
 #print(x)  
 
 
@@ -327,15 +360,15 @@ x  = '?'
 
 # df.iloc[list of row pos] --> dataframe with rows in the list
 # Note: will raise IndexError if pos is out of bounds
-x  = '?'
+x  = df.iloc[[0, 1]]
 #print(x)  
 
 
 # However, Pandas will raise an exception if any of the indexes is out of
 # bounds:
-# x = df.iloc[[0, 10]] # --> raises IndexError
+x = df.iloc[[0, 10]] # --> raises IndexError
 
-# x = df.iloc[[0,100], :] # --> raises IndexError
+x = df.iloc[[0,100], :] # --> raises IndexError
 
 
 
@@ -343,27 +376,41 @@ x  = '?'
 # 2.2.3 Dataframe.iloc: Selection using slices
 
 # Slices work like ser.iloc
-x  = '?'
+x  = df.iloc[1:1000, :]
 #print(x)  
 
 # x--> empty DF
-x  = '?'
+x  = x = df.iloc[999:1000, :]
 #print(x)  
 
 
 
 # Slices can be open ended 
 # Set x so it includes all prices starting from the second row
-x  = '?'
+x  = df.iloc[2:, :]
 #print(x)  
 
 # Set x to be a series with all columns of the first row
-x  = '?'
+x  = df.iloc[0, 0:]
 #print(x)  
 
 # This will produce an empty series
-#x = df.iloc[0, 10:]  
+x = df.iloc[0, 10:]
 #print(x)  
+
+# In‑Class Exercise 3
+# Please selectthe values for the even‑indexed rows col2 from the following
+# dataframe.
+df = pd.DataFrame(
+  {
+    'col1': range(0, 20),
+    'col2': range(20, 40),
+    'col3': range(40, 60)
+  }
+)
+rows = list(range(0, len(df), 2))
+result = df.iloc[rows, [1]]
+print(result)
 
 
 
@@ -392,17 +439,18 @@ x  = '?'
 # 3.1.1 label, list of labels, label slices
 
 # Single labels
-# 
+
 # | Selection     | Result       | Notes                                |
 # |---------------|--------------|--------------------------------------|
 # | series[label] | scalar value | Label must exist, otherwise KeyError |
 
 # Set `x` to be the price for '2020-01-13'
-x  = '?'
+x  =  ser['2020‑01‑13']
 #print(x) # --> 7.02  
 
+
 # Try using an index label that does not exist, It will raise a KeyError
-# x = ser['3000-01-10'] 
+x = ser['3000-01-10']
 
 
 # List of labels
@@ -413,13 +461,13 @@ x  = '?'
 
 
 # Set `x` to be a series with the first two rows of `ser`
-x  = '?'
+x  = ser[['2020‑01‑02', '2020‑01‑03']]
 #print(x)  
 
 # All labels must exist. The following will raise a KeyError because a label
 # is not part of ser.index
 
-#x = ser[['2020-01-02', '3000-01-10']] 
+x = ser[['2020-01-02', '3000-01-10']]
 
 
 # Using label slices 
@@ -433,7 +481,7 @@ x  = '?'
 # elements between `start_label` and `end_label` (including endpoints)
 
 # Set `x` to include all obs between  '2020-01-13' and '2020-01-14'
-x  = '?'
+x  =  ser['2020‑01‑13':'2020‑01‑14']
 #print(x)  
 
 
@@ -446,39 +494,42 @@ x  = '?'
 # The `ser` above is sorted by index. 
 # Set `x` to include all obs between '2020-01-13' and '3000-01-01'. The
 # end data (obviously) is not part of the series
-x  = '?'
+x  = ser['2020‑01‑13':'3000‑01‑01']
+
 #print(x)  
 
 # Create a series with an unsorted index 
-#new_ser = pd.Series(data=[1,3,2], index=['a', 'c', 'b'])  
+new_ser = pd.Series(data=[1,3,2], index=['a', 'c', 'b'])
 
 # First, select a slice from 'a' to 'b'. Because both labels are included in
 # the index, the slice will contain all obs between the indexes 'a' and 'b'
-x  = '?'
+x  = new_ser['a':'b']
+
 #print(x)  
 
 # Next, select a slice from 'a' to 'z'. Note that 'z' is not part of the
 # index. Since the index is not sorted, the following will result in an error
-# x = new_ser['b':'z']  
+x = new_ser['b':'z']
 
 
 # Series also have a method called `sort_index`, which will return a copy of the
-# series with sorted indexes:
+#  series with sorted indexes:
 
 # Sort the series
-sorted_ser  = '?'
+sorted_ser  = new_ser.sort_index()
+
 #print(sorted_ser)  
 
 
 # This will return only the first rows (not the entire series as before)
-#x = sorted_ser['a':'b']  
+x = sorted_ser['a':'b']
 #print(x)  
 
 
 
 # `sorted_ser` is sorted so the following will return the intersection between
 # the slice and the row labels
-#x = sorted_ser['b':'z']  
+x = sorted_ser['b':'z']
 #print(x)  
 
 
@@ -499,25 +550,27 @@ sorted_ser  = '?'
 #    dtype: float64
 
 # Get the first element of the series
-x  = '?'
+x  =  ser[0]
+
 
 # Get the first and fourth element (series)
-x  = '?'
+x  = ser[[0,3]]
+
 
 # NOTE: When using slices, the endpoints are NOT included
 # This will return a series with the first element only
-#x = ser[0:1]   
+x = ser[0:1]
 
 # This will return the first five elements of the series
-#x = ser[:5]  
+x = ser[:5]
 #print(x)  
 
 # This will return every other element, starting at position 0
-#x = ser[::2]  
+x = ser[::2]
 #print(x)  
 
 # This returns the series in reverse order
-#x = ser[::-1]  
+x = ser[::-1]
 #print(x)  
 
 
@@ -553,12 +606,12 @@ x = new_ser[1:-4]
 
 # df[column label] --> series if column exists, error otherwise
 # `x` will be a series with values in Close
-#x = df['Close']   
+x = df['Close']
 #print(x)  
 
 # Note that the label is case sensitive. For instance the following 
 # raises KeyError 
-#x = df['CLOSE'] 
+x = df['CLOSE']
 
 
 # Sequences of labels
@@ -570,12 +623,12 @@ x = new_ser[1:-4]
 # df[list of column labels] --> dataframe with columns in the same order
 # as the column labels
 # Note: All column labels must exist, otherwise error
-#cols = ['Bday', 'Close']  
-#x = df[cols]  
+cols = ['Bday', 'Close']
+x = df[cols]
 #print(x)  
 
 # Note: Remember that this will NOT work (because it is not a list)
-#x = df['Close', 'Bday'] #--> raise error
+x = df['Close', 'Bday'] #--> raise error
 
 
 # 3.2.2 row label slices
@@ -606,13 +659,13 @@ x = new_ser[1:-4]
 
 # You can use position instead of row labels, but endpoints are NOT included
 # x --> all rows but the last one
-#x = df[:-1]   
-#print(x)  
+x = df[:-1]
+print(x)
 
 # Will NOT raise error if out of bounds
 # x -> returns empty DF
-#x = df[100:1001]  
-#print(x)  
+x = df[100:1001]
+print(x)
 # Returns:
 # Empty DataFrame
 # Columns: [Close, Bday]
